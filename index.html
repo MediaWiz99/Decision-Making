@@ -1089,18 +1089,25 @@
         let studentName = '';
         let surveyDate = '';
 
-        // Robust auto-date initialization
+        // Robust auto-date initialization with multiple fallbacks
         function setTodayDate() {
             var dateField = document.getElementById('testDate');
-            if (dateField) {
+            if (dateField && !dateField.value) {
                 dateField.value = new Date().toISOString().split('T')[0];
             }
         }
-        if (document.readyState === 'complete' || document.readyState === 'interactive') {
-            setTodayDate();
-        }
+        // Try immediately
+        setTodayDate();
+        // Try on DOMContentLoaded
         document.addEventListener('DOMContentLoaded', setTodayDate);
+        // Try on window load
         window.addEventListener('load', setTodayDate);
+        // Try with requestAnimationFrame
+        requestAnimationFrame(setTodayDate);
+        // Try with setTimeout fallbacks
+        setTimeout(setTodayDate, 0);
+        setTimeout(setTodayDate, 100);
+        setTimeout(setTodayDate, 500);
 
         function startAssessment() {
             studentName = document.getElementById('studentName').value.trim();
@@ -1760,7 +1767,6 @@
 
             doc.save('Decision_Style_' + studentName.replace(/\s+/g, '_') + '_' + new Date().toISOString().split('T')[0] + '.pdf');
         }
-        }
 
         function restartAssessment() {
             currentQuestion = 0;
@@ -1774,12 +1780,6 @@
             document.getElementById('progressFill').style.width = '0%';
             window.scrollTo(0, 0);
         }
-
-        // Initialize date field immediately (script is at bottom of body, so DOM is ready)
-        (function initDateField() {
-            var d = document.getElementById('testDate');
-            if (d) d.value = new Date().toISOString().split('T')[0];
-        })();
     </script>
 </body>
 </html>
