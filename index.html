@@ -1774,6 +1774,12 @@
             document.getElementById('progressFill').style.width = '0%';
             window.scrollTo(0, 0);
         }
+
+        // Initialize date field immediately (script is at bottom of body, so DOM is ready)
+        (function initDateField() {
+            var d = document.getElementById('testDate');
+            if (d) d.value = new Date().toISOString().split('T')[0];
+        })();
     </script>
 </body>
 </html>
